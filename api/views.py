@@ -11,16 +11,19 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from core.models import *
 from .serializers import *
+from requests import get
+
+lastId = 0
 
 @api_view(['GET',])
 def testing(request):
-    print(request)
-    return Response({'status': 'success', 'data': {'s   aludo': 'hola!'}}, status=status.HTTP_200_OK)
+    return Response({'status': 'success', 'data': {'saludo': 'hola!'}}, status=status.HTTP_200_OK)
 
 @api_view(['POST',])
 def pasar_asistencia(request):
     try:
         serial = request.POST['serial']
+        clase_id = lastId
     except KeyError:
         return Response({'status': 'error', 'data': {'descripcion': 'Serial no enviada en POST'}}, status=status.HTTP_200_OK)
     try:
@@ -28,6 +31,11 @@ def pasar_asistencia(request):
     except Credencial.DoesNotExist:
         return Response({'status': 'error', 'data': {'descripcion': 'Credencial no encontrada'}}, status=status.HTTP_200_OK)
     alumno = credencial.alumno_id
+    print(clase_id)
+    clase = Clase.objects.get(pk = clase_id)
+    asist = Asistencia.objects.get(clase_id = clase, alumno_id = alumno)
+    asist.presente = True
+    asist.save()
     serializer = AlumnoSerializer(alumno)
     if serializer.is_valid:
         return Response({'status': 'success', 'data': serializer.data}, status=status.HTTP_200_OK)
@@ -42,6 +50,8 @@ def lista_asistencia(request, id):
         alumnos = Asistencia.objects.filter(clase_id = clase).all()
         serializer = AsistenciaSerializer(alumnos, many = True)
         if serializer.is_valid:
+            global lastId 
+            lastId = clase.pk
             return Response({'status': 'success', 'data': serializer.data}, status=status.HTTP_200_OK)
         else:
             return Response({'status': 'error', 'data': serializer.errors}, status=status.HTTP_200_OK)
@@ -305,7 +315,6 @@ def traerAsistencia(request, id):
                 try:
                     serializer[asistencia.alumno_id.nombre+' '+ asistencia.alumno_id.apellido]['total'] +=1
                 except Exception as e:
-                    print(e.__class__)
                     serializer[asistencia.alumno_id.nombre+' '+ asistencia.alumno_id.apellido]['total'] =1
                 if asistencia.presente:
                     try:

@@ -27,19 +27,7 @@ function back() {
     window.location.replace('/logout/');
 }
 
-function abrirModal(e, toggle) {
-    var qrDom = $('#QrAsistencia')[0];
-    lastOpen = e;
-    if(toggle) {
-        $('#timer').html(``);
-        timer = 300;
-        clearInterval(intervalo);
-        qrDom.src = '';
-        qrDom.height = 0;
-        qrDom.width = 0;
-        $('#AsistenciaModal').modal('toggle');
-    }
-    claseId = e.id;
+function rellenarModal(claseId) {
     $.get(`/api/v1/lista_asistencia/${claseId}/?format=json`, data => {
         var presente;
         var color;
@@ -71,6 +59,23 @@ function abrirModal(e, toggle) {
                 `;
         });
     });
+}
+
+function abrirModal(e, toggle) {
+    var qrDom = $('#QrAsistencia')[0];
+    lastOpen = e;
+    if(toggle) {
+        $('#timer').html(``);
+        timer = 300;
+        clearInterval(intervalo);
+        qrDom.src = '';
+        qrDom.height = 0;
+        qrDom.width = 0;
+        $('#AsistenciaModal').modal('toggle');
+    }
+    claseId = e.id;
+    rellenarModal(claseId);
+    intervalo = setInterval(() => rellenarModal(claseId), 2500);
 }
 
 function reloadPage() {
@@ -179,6 +184,12 @@ function borrarClase() {
             console.log('dismiss');
         }
     });
+}
+
+function activarCredencial() {
+    var tokenClase;
+    tokenClase = generarTokenClase(claseId)
+    
 }
 
 $(document).ready(function() {
