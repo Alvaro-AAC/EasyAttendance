@@ -131,6 +131,11 @@ class Alumno(models.Model):
     def __exit__(self, type, value, traceback):
         del self
 
+class Credencial(models.Model):
+    credencial_id = models.BigAutoField(primary_key=True)
+    serial = models.CharField(max_length=100, unique=True, null=False, blank=False)
+    alumno_id = models.ForeignKey(Alumno, on_delete=models.CASCADE)
+
 class Alumno_Seccion(models.Model):
     seccion_id = models.ForeignKey(Seccion, on_delete=models.CASCADE)
     alumno_id = models.ForeignKey(Alumno, on_delete=models.CASCADE)

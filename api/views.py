@@ -14,7 +14,23 @@ from .serializers import *
 
 @api_view(['GET',])
 def testing(request):
-    return Response({'status': 'success', 'data': {'Saludo': 'hola!'}}, status=status.HTTP_200_OK)
+    print(request)
+    return Response({'status': 'success', 'data': {'s   aludo': 'hola!'}}, status=status.HTTP_200_OK)
+
+@api_view(['POST',])
+def pasar_asistencia(request):
+    serial = request.POST['serial']
+    try:
+        credencial = Credencial.objects.get(serial = serial)
+    except Credencial.DoesNotExist:
+        return Response({'status': 'error', 'data': {'descripcion': 'Credencial no encontrada'}}, status=status.HTTP_200_OK)
+    alumno = credencial.alumno_id
+    serializer = AlumnoSerializer(alumno)
+    if serializer.is_valid:
+        return Response({'status': 'success', 'data': serializer.data}, status=status.HTTP_200_OK)
+    else:
+        return Response({'status': 'error', 'data': serializer.errors}, status=status.HTTP_200_OK)
+
 
 @api_view(['GET',])
 def lista_asistencia(request, id):
