@@ -135,6 +135,12 @@ class Credencial(models.Model):
     credencial_id = models.BigAutoField(primary_key=True)
     serial = models.CharField(max_length=100, unique=True, null=False, blank=False)
     alumno_id = models.ForeignKey(Alumno, on_delete=models.CASCADE)
+    class Meta:
+        verbose_name_plural = 'Credenciales'
+
+    def __str__(self):
+        return f'{str(self.serial)} - {str(self.alumno_id)}'
+
 
 class Alumno_Seccion(models.Model):
     seccion_id = models.ForeignKey(Seccion, on_delete=models.CASCADE)
