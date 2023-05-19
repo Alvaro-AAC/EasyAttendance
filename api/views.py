@@ -19,7 +19,10 @@ def testing(request):
 
 @api_view(['POST',])
 def pasar_asistencia(request):
-    serial = request.POST['serial']
+    try:
+        serial = request.POST['serial']
+    except KeyError:
+        return Response({'status': 'error', 'data': {'descripcion': 'Serial no enviada en POST'}}, status=status.HTTP_200_OK)
     try:
         credencial = Credencial.objects.get(serial = serial)
     except Credencial.DoesNotExist:
