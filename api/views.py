@@ -61,7 +61,8 @@ def lista_asistencia(request, id):
 @api_view(['GET',])
 def registrar_asistencia(request, token_clase, token_usuario):
     if request.method == 'GET':
-        clase = CodigoQR.objects.get(url = token_clase).clase_id
+        qr = CodigoQR.objects.get(url = token_clase)
+        clase = qr.clase_id
         alumno = TokenAlumno.objects.get(token = token_usuario).alumno_id
         asist = Asistencia.objects.get(clase_id = clase, alumno_id = alumno)
         asist.presente = True
@@ -71,6 +72,20 @@ def registrar_asistencia(request, token_clase, token_usuario):
             'alumno': str(alumno),
             'presente': 'Verdadero',
         }
+        qr.delete()
+        return Response({'status': 'success', 'data': data})
+    else:
+        return Response({'status': 'error'}, status=status.HTTP_200_OK)
+    
+@api_view(['GET',])
+def qr_valido(request, token_clase):
+    if request.method == 'GET':
+        data = {}
+        try:
+            qr = CodigoQR.objects.get(url = token_clase)
+            data['existe'] = True
+        except CodigoQR.DoesNotExist:
+            data['existe'] = False
         return Response({'status': 'success', 'data': data})
     else:
         return Response({'status': 'error'}, status=status.HTTP_200_OK)
@@ -139,7 +154,7 @@ def codigo_login(request):
         email_from = settings.EMAIL_HOST_USER
         recipient_list = [f'{username}@duocuc.cl']
 
-        #send_mail(subject, plain_message, email_from, recipient_list, html_message=html_message )
+        send_mail(subject, plain_message, email_from, recipient_list, html_message=html_message )
 
         data = {
             'token': token.token

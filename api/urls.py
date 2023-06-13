@@ -7,6 +7,7 @@ urlpatterns = [
     path('v1/pasar_asistencia/', pasar_asistencia),
     path('v1/lista_asistencia/<id>/', lista_asistencia),
     path('v1/registrar_asistencia/<token_clase>/<token_usuario>/', registrar_asistencia),
+    path('v1/qr_valido/<token_clase>/', qr_valido),
     path('v1/generar_codigo_clase/', codigo_asistencia),
     path('v1/generar_codigo_alumno/', codigo_usuario),
     path('v1/generar_codigo_login/', codigo_login),

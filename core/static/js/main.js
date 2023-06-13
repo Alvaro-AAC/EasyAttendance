@@ -2,7 +2,8 @@ var input;
 var claseId;
 var intervalo;
 var lastOpen;
-var timer = 300;
+var timer = 60;
+var isvalidqr = true;
 
 function getCSRF() {
     var cookies_array = document.cookie.split(';');
@@ -65,8 +66,9 @@ function abrirModal(e, toggle) {
     var qrDom = $('#QrAsistencia')[0];
     lastOpen = e;
     if(toggle) {
+        $('#btnQR').prop('disabled', false);
         $('#timer').html(``);
-        timer = 300;
+        timer = 60;
         clearInterval(intervalo);
         qrDom.src = '';
         qrDom.height = 0;
@@ -87,16 +89,18 @@ function refresh() {
 }
 
 async function generarQr() {
+    timer = 60;
+    clearInterval(await intervalo);
     var tokenClase;
-    tokenClase = generarTokenClase(claseId)
+    tokenClase = await generarTokenClase(claseId)
     new QRious({
         element: $('#QrAsistencia')[0],
-        value: `${await tokenClase}`,
+        value: `${tokenClase}`,
         size: 200,
         foreground: 'black',
         level: 'H'
     });
-    $('#timer').html(`Tiempo: 5:00`);
+    $('#timer').html(`Tiempo: 1:00`);
     intervalo = setInterval(function() {
         abrirModal(lastOpen, false);
         timer -= 1;
@@ -109,12 +113,24 @@ async function generarQr() {
         if(timer <= 0) {
             var qrDom = $('#QrAsistencia')[0];
             $('#timer').html(``);
-            clearInterval(intervalo);
+            clearTimeout(intervalo);
             qrDom.src = '';
             qrDom.height = 0;
             qrDom.width = 0;
+            $('#btnQR').prop('disabled', false);
         }
+        
+        $.get(`/api/v1/qr_valido/${tokenClase}/`).then((resp) => {if(!resp.data.existe){
+            var qrDom = $('#QrAsistencia')[0];
+            $('#timer').html(``);
+            timer = 0;
+            qrDom.src = '';
+            qrDom.height = 0;
+            qrDom.width = 0;
+            $('#btnQR').prop('disabled', false);
+        }});
     }, 1000);
+    $('#btnQR').prop('disabled', true);
 }
 
 async function generarTokenClase(id) {

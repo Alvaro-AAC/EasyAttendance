@@ -30,7 +30,7 @@ SECRET_KEY = get_key(BASE_DIR + '/.env', 'KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', '129.151.110.110', '34.176.119.214','localhost', '*']
+ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', '129.151.110.110', '34.176.119.214','129.151.111.182','localhost', '*']
 
 
 # Application definition
