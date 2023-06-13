@@ -3,16 +3,10 @@ import core.models
 
 # Register your models here.
 
-admin.site.register(core.models.Ramo)
-admin.site.register(core.models.Modulo)
-admin.site.register(core.models.Seccion)
-admin.site.register(core.models.Horario_Seccion)
-admin.site.register(core.models.Alumno)
-admin.site.register(core.models.Alumno_Seccion)
-admin.site.register(core.models.Profesor)
-admin.site.register(core.models.Clase)
-admin.site.register(core.models.Asistencia)
-admin.site.register(core.models.CodigoQR)
-admin.site.register(core.models.TokenAlumno)
-admin.site.register(core.models.TokenLogin)
-admin.site.register(core.models.Credencial)
+admin.register(core.models.Ramo,core.models.Modulo,
+               core.models.Seccion,core.models.Horario_Seccion,
+               core.models.Alumno,core.models.Alumno_Seccion,
+               core.models.Profesor,core.models.Clase,
+               core.models.Asistencia,core.models.CodigoQR,
+               core.models.TokenAlumno,core.models.TokenLogin,
+               core.models.Credencial)(admin.ModelAdmin)

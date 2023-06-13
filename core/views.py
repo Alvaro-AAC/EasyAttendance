@@ -13,10 +13,7 @@ def guard(function):
             username = request.session['username']
             try:
                 profesor = Profesor.objects.get(usuario = username)
-                if profesor.administrador != '1':
-                    return function(request, user=profesor)
-                else:
-                    return redirect('/clases/')
+                return function(request, **kwargs, user=profesor)
             except Profesor.DoesNotExist:
                 request.session.flush()
                 redirect('/login/')
@@ -31,14 +28,11 @@ def redirecter(request):
     except KeyError:
         return redirect('/login/')
 
-def home(request):
-    try:
-        profe = request.session['username']
-    except KeyError:
-        return redirect('/login/')
+@guard
+def home(request, user):
     ctx = {}
-    ctx['prof'] = Profesor.objects.filter(usuario = profe['usuario']).get()
-    ctx['secciones'] = Seccion.objects.filter(profesor_id = ctx['prof']).all()
+    ctx['prof'] = user
+    ctx['secciones'] = Seccion.objects.filter(profesor_id = user).all()
     ramos = []
     for elem in ctx['secciones']:
         ramos.append(elem.ramo_id)
@@ -52,14 +46,14 @@ def login(request):
     except KeyError:
         return render(request, 'core/login.html')
 
-def loginVerify(request):
+def verifyLogin(request):
     if request.method == 'POST':
-        user = request.POST['user']
-        password = request.POST['pwd']
+        user = request.POST.get('user')
+        password = request.POST.get('pwd')
         try:
             profe = Profesor.objects.get(usuario = user)
             if check_password(password, profe.contrasena):
-                request.session['username'] = ProfesorSerializer(profe).data
+                request.session['username'] = user
                 return JsonResponse({'status': 'success'})
             else:
                 return JsonResponse({'status': 'dataerror'})

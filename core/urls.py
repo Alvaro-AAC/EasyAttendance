@@ -6,7 +6,7 @@ urlpatterns = [
     path('', redirecter),
     path('login/', login),
     path('clases/', home),
-    path('verifyLogin/', loginVerify),
+    path('verifyLogin/', verifyLogin),
     path('logout/', logout),
     path('crearclase/', crearclase),
     path('verificar/<token>/', verificar),

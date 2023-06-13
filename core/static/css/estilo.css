@@ -141,12 +141,6 @@ body {
   top: calc(50% - 2px);
 }
 
-
-
-
-
-
-
 .eye-icon-btn {
   width: 50px;
   height: 50px;
@@ -230,4 +224,85 @@ body {
 
 .eye-btn:hover #eye {
   display: none;
+}
+
+#contenedorlogoduoc {
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  position: absolute;
+  width: 25%;
+  padding-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#logoduoc {
+  width: 49%;
+  height: max-content;
+}
+
+#logoeasyattendance {
+  width: 30%;
+}
+
+@media only screen and (max-width: 1400px) {
+  #form {
+    align-self: center;
+    justify-self: center;
+    text-align: left;
+    width: 50%;
+  }
+}
+
+@media only screen and (max-width: 869px) {
+  #contenedorlogoduoc {
+      width: 50%;
+      padding-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+  }
+  #logoeasyattendance {
+      width: 45%;
+  }
+  #logoeasyattendance {
+      width: 30%;
+  }
+  #form {
+    align-self: center;
+    justify-self: center;
+    text-align: left;
+    width: 65%;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  #form {
+    align-self: center;
+    justify-self: center;
+    text-align: left;
+    width: 75%;
+  }
+}
+
+@media only screen and (max-width: 377px) {
+  #contenedorlogoduoc {
+      width: 80%;
+      padding-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+  }
+  .iconologin {
+      display: block;
+      text-align: center;
+  }
+  #form {
+    align-self: center;
+    justify-self: center;
+    text-align: left;
+    width: 90%;
+  }
 }
